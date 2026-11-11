@@ -1,0 +1,283 @@
+# Machine-readable architecture model of UNICADO propulsion_design
+# Status markers: documented | verified | todo
+schema_version: 1
+module:
+  id: propulsion_design
+  name: propulsion_design
+  version: 3.0.0
+  kind: sizing_tool
+  language: C++20
+  source_root: aircraft-design/propulsion_design/src
+  purpose: >
+    Sizes the engines, designs nacelles and pylons, positions the propulsion
+    systems on the aircraft airframe and estimates their mass, CG, and inertia properties.
+
+context:
+  actors:
+    - id: aircraft_designer
+      kind: person
+      interaction: defines propulsors in the acXML and methods/factors in propulsion_design_conf.xml
+      status: documented
+  systems:
+    - id: design_loop
+      name: Aircraft design loop (RCE workflow)
+      interaction: executes the sizing tool once per iteration via CLI
+      status: verified
+    - id: acxml
+      name: Aircraft exchange file (acXML)
+      interaction: main shared input and output data model
+      status: documented
+    - id: engine_database
+      name: Engine database (engineXML and CSV decks)
+      interaction: reference engines (e.g. V2527-A5, V2527-H2)
+      status: documented
+    - id: geometry_data
+      name: Geometry & airfoil data (.dat files)
+      interaction: airfoil and polygon cross-section profiles for airframe, nacelles, and pylons
+      status: verified
+    - id: gnuplot
+      name: gnuplot
+      interaction: plotting backend invoked via pipe by Matplot++ for bucket curve SVG plots (optional)
+      status: verified
+    - id: downstream_tools
+      name: Downstream UNICADO sizing tools
+      interaction: read component_design/propulsion (Aerodynamics, Weight & Balance, Mission Analysis)
+      status: documented
+
+dependencies:
+  libraries:
+    - {id: moduleBasics, target: "UnicadoLibs::moduleBasics", use: "Module lifecycle, RuntimeIO, Report/HTML utilities", status: verified}
+    - {id: strategy, target: "UnicadoLibs::strategy", use: "Strategy base class of PropulsionStrategy", status: verified}
+    - {id: engine, target: "UnicadoLibs::engine", use: "EngineData, Engine, DeckData CSV parser, N1 penalties, scaling", status: verified}
+    - {id: aircraftGeometry2, target: "UnicadoLibs::aircraftGeometry2", use: "3D MultisectionSurface, factories, .dat I/O, centroid (CG) and inertia", status: verified}
+    - {id: aixml, target: "UnicadoLibs::aixml", use: "XML node access, EndnodeReadOnly, openDocument/saveDocument", status: verified}
+    - {id: atmosphere, target: "UnicadoLibs::atmosphere", use: "ISA flight condition and atmospheric state calculation", status: verified}
+    - {id: unitConversion, target: "unitConversion", use: "G_FORCE and physical constants", status: verified}
+    - {id: eigen3, target: "Eigen3::Eigen", use: "Eigen::Vector3d (CG) and Eigen::Matrix3d (inertia tensor)", status: verified}
+    - {id: matplotpp, target: "Matplot++::matplot", use: "Bucket curve SVG plot generation", status: verified}
+    - {id: propulsionsystem, use: "future PropulsionSystem engine method", status: planned}
+  tools:
+    - {id: gnuplot, setting: gnuplot_path, optional: true}
+
+interfaces:
+  inputs:
+    - id: I1.thrust_to_weight
+      path: /aircraft_exchange_file/sizing_point/thrust_to_weight
+      required: true
+    - id: I1.mtom
+      path: /aircraft_exchange_file/analysis/masses_cg_inertia/maximum_takeoff_mass
+      required: true
+    - id: I1.bleed_offtake
+      path: /aircraft_exchange_file/component_design/systems/specific/average_bleed_air_demand
+      required: false
+      default: zero offtake used with warning if missing
+    - id: I1.shaft_offtake
+      path: /aircraft_exchange_file/component_design/systems/specific/average_power_demand
+      required: false
+      default: zero offtake used with warning if missing
+      status: verified
+    - id: I1.energy_carriers
+      path: /aircraft_exchange_file/requirements_and_specifications/design_specification/energy_carriers
+      fields: [ID, value]
+      required: true
+    - id: I1.propulsors
+      path: /aircraft_exchange_file/requirements_and_specifications/design_specification/propulsion
+      fields: [ID, powertrain, type, position.parent_component, position.x, position.y, position.z, energy_carrier_ID, thrust_share]
+      required: true
+    - id: I3.engine_database
+      setting: path_engine_database
+      required: true
+    - id: I3.geometry_profiles
+      setting: getGeometryDir()
+      required: false
+    - id: I9.configuration
+      file: propulsion_design_conf.xml
+      required: true
+  outputs:
+    - id: I2.propulsion
+      path: /aircraft_exchange_file/component_design/propulsion
+      content: [reference_offset, position, mass, center_of_gravity, inertia, engine.model, engine.scale_factor, engine.slst, engine.bucket_point.thrust, engine.bucket_point.tsfc, nacelle.sections, nacelle.profile, pylon.sections, pylon.profile]
+    - id: I4.engine_files
+      location: project engine deck directory (getEngineDataDir())
+      content: [scaled engine XML, scaled CSV deck files]
+    - id: I4.reports
+      location: aircraft_exchange_file_directory / reporting directories
+      content: [propulsion_design_report.html, propulsion_design_results.xml, SVG plots (if plotOn)]
+
+configuration:
+  file: propulsion_design_conf.xml
+  control_settings: [aircraft_exchange_file_name, aircraft_exchange_file_directory, console_output, report_output, xml_output, plot_output, gnuplot_path]
+  program_settings:
+    path_engine_database: path
+    flight_condition: [Mach, Altitude, ISA]
+    name_wing_engines: string
+    methods:
+      engine_designer: {implemented: [Rubber], planned: [Empirical, PropulsionSystem]}
+      nacelle_designer: {implemented: [Default]}
+      pylon_designer: {implemented: [Default]}
+      propulsion_integrator: {implemented: [Default]}
+      mass_analyzer: {implemented: [Default]}
+    technology_factors: [engine_mass, nacelle_mass, pylon_mass, engine_efficiency]
+    user_shifts: [usershift_x, usershift_y, usershift_z]
+    propulsion_overrides: "propulsion ID=Default (index -1), overridden per acXML propulsor ID"
+  position_combinations:
+    - {parent: wing, y: [left, right], x: front, z: [under, over], engines_supported: [2, 4]}
+    - {parent: wing_body, y: [left, right], x: [front, back], z: [over], engines_supported: [1, 2]}
+    - {parent: fuselage, y: [left, right], x: rear, z: mid, engines_supported: [2]}
+    - {parent: empennage, y: mid, x: front, z: in, engines_supported: [1]}
+
+engine_types:
+  - {type: Turbofan, carrier: Kerosene, method: Rubber, reference: V2527-A5, status: running}
+  - {type: Turbofan, carrier: Liquid_Hydrogen, method: Rubber, reference: V2527-H2, status: to_be_tested}
+  - {type: Openrotorfan, carrier: Kerosene, method: Rubber, status: implemented_in_code}
+  - {type: Turboprop, carrier: Kerosene, method: none, status: methods_missing}
+  - {type: Turboprop, carrier: Liquid_Hydrogen, method: none, status: methods_missing}
+
+scaling_exponents:
+  thrust: 1
+  fuel_flow: 1
+  mass_flow: 1
+  max_bleed: 1
+  max_shaft_offtake: 1
+  lto_fuel_flow: 1
+  diameter: 0.5
+  length: 0.4
+  weight: 1.1
+  lto_emissions: 0
+
+runtime:
+  lifecycle: [initialize, run, update, report, save]
+  discipline_order: [engine_designer, nacelle_designer, propulsion_integrator, pylon_designer, mass_analyzer]
+  per: propulsor
+  dispatch: std::visit over PropulsionType std::variant
+  engines_independent: true
+  c4_code_level_drawio_models:
+    - ../M5-dependencies/PropulsionDesign_CMake.drawio
+    - ../M7-runtime/PropulsionDesign_MainCPP.drawio
+    - ../M7-runtime/PropulsionDesign_Initialize.drawio
+    - ../M7-runtime/PropulsionDesign_Run.drawio
+    - ../M7-runtime/PropulsionDesign_Update.drawio
+    - ../M7-runtime/PropulsionDesign_Report.drawio
+    - ../M7-runtime/PropulsionDesign_Save.drawio
+
+components:
+  - id: coordinator
+    namespace: ""
+    classes: [PropulsionDesign]
+    base: moduleBasics::Module
+    files: [main.cpp, toolinfo.h, propulsion_design.h, propulsion_design.cpp]
+  - id: strategy_base
+    classes: [PropulsionStrategy]
+    base: moduleBasics::Strategy
+    files: [propulsion_strategy.h]
+  - id: data_model
+    classes: [Propulsion, Turbofan, Turboprop, Openrotorfan, Fan, Propeller, BucketPoint, Offtakes, Dimension_3, FlightCondition, ParentComponent]
+    files: [propulsion.h, energy_carrier.h]
+  - id: engine_designer
+    namespace: design
+    classes: [EngineDesigner, Rubber]
+    base: PropulsionStrategy
+    files:
+      - engine_design/engine_design.h
+      - engine_design/engine_design.cpp
+      - engine_design/rubber/rubber_design.h
+      - engine_design/rubber/rubber_design.cpp
+      - engine_design/rubber/turbofan.cpp
+      - engine_design/rubber/openrotorfan.cpp
+  - id: propulsion_integrator
+    namespace: design::integration
+    classes: [PropulsionIntegrator, Default, EngineCount, EngineShift]
+    base: PropulsionStrategy
+    files:
+      - integration/propulsion_integration.h
+      - integration/default/default_integration.h
+      - integration/default/default_integration.cpp
+      - integration/default/turbofan.cpp
+      - integration/default/openrotorfan.cpp
+  - id: nacelle_designer
+    namespace: geometry::nacelle
+    classes: [NacelleDesigner, Default]
+    base: PropulsionStrategy
+    files:
+      - nacelle/nacelle_design.h
+      - nacelle/default/default_nacelle.h
+      - nacelle/default/default_nacelle.cpp
+      - nacelle/default/turbofan.cpp
+      - nacelle/default/openrotorfan.cpp
+  - id: pylon_designer
+    namespace: geometry::pylon
+    classes: [PylonDesigner, Default]
+    base: PropulsionStrategy
+    files:
+      - pylon/pylon_design.h
+      - pylon/default/default_pylon.h
+      - pylon/default/default_pylon.cpp
+      - pylon/default/turbofan.cpp
+      - pylon/default/openrotorfan.cpp
+  - id: mass_analyzer
+    namespace: mass
+    classes: [MassAnalyzer, Default, PointMass]
+    base: PropulsionStrategy
+    files:
+      - mass/mass_analysis.h
+      - mass/point_mass.h
+      - mass/point_mass.cpp
+      - mass/default/default_mass.h
+      - mass/default/turbofan.cpp
+      - mass/default/openrotorfan.cpp
+  - id: io
+    namespace: io
+    classes: [AircraftXML, AircraftXMLv3, detail::AircraftXMLInterface]
+    files: [io/aircraft_xml.h, io/aircraft_xml.cpp, io/engine_xml.h, io/engine_xml.cpp]
+  - id: report
+    namespace: report
+    classes: [Data, BucketCurve]
+    files:
+      - report/report_data.h
+      - report/report_data.cpp
+      - report/create_html_report.cpp
+      - report/create_xml_report.cpp
+      - report/create_plots.cpp
+      - report/file_names.h
+  - id: geometry_access
+    namespace: geometry
+    classes: [Aircraft]
+    files: [aircraft_geometry.h]
+  - id: utility
+    namespace: utility
+    files: [utility.h, utility.cpp]
+
+relationships:
+  - {from: coordinator, to: strategy_base, kind: selects_and_dispatches_via_std_visit}
+  - {from: coordinator, to: io, kind: uses}
+  - {from: coordinator, to: report, kind: uses}
+  - {from: engine_designer, to: data_model, kind: mutates}
+  - {from: nacelle_designer, to: data_model, kind: mutates}
+  - {from: propulsion_integrator, to: data_model, kind: mutates}
+  - {from: propulsion_integrator, to: geometry_access, kind: uses}
+  - {from: pylon_designer, to: data_model, kind: mutates}
+  - {from: pylon_designer, to: geometry_access, kind: uses}
+  - {from: mass_analyzer, to: data_model, kind: mutates}
+  - {from: engine_designer, to: engine, kind: uses_library}
+  - {from: nacelle_designer, to: aircraftGeometry2, kind: uses_library}
+  - {from: propulsion_integrator, to: aircraftGeometry2, kind: uses_library}
+  - {from: pylon_designer, to: aircraftGeometry2, kind: uses_library}
+  - {from: mass_analyzer, to: aircraftGeometry2, kind: uses_library}
+  - {from: mass_analyzer, to: eigen3, kind: uses_library}
+  - {from: report, to: matplotpp, kind: uses_library}
+
+risks: [R1, R2, R3, R4, R5, R6]
+technical_debt: [Debt_Item_1_XML_Reads_In_Calculations, Debt_Item_2_Hardcoded_Strategy_Selection, D1, D2, D3, D4, D5, D8, D9, D10, D11, D12, D13, D14, D15]
+
+regression_baseline:
+  aircraft: CSR-02
+  version: 3.0.0
+  values:
+    nacelle_mass_kg: 1085.0
+    pylon_mass_kg: 534.5
+    engine_length_m: 2.641
+    nacelle_inlet_width_m: 2.259
+    pylon_chord_at_nacelle_m: 2.641
+    pylon_chord_at_wing_m: 2.641
+    pylon_span_m: 1.129
+    pylon_le_position_at_wing_m: 1.948

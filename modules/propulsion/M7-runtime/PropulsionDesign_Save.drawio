@@ -1,0 +1,184 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="27XiwsGnbxS-KYGB4DOw">
+    <mxGraphModel dx="2205" dy="932" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <UserObject label="" mermaidData="{&#xa;  &quot;data&quot;: &quot;flowchart TD\n    %% ==========================================\n    %% PASTEL AESTHETIC STYLE PATTERN\n    %% ==========================================\n    classDef startEnd fill:#C8C8FF,stroke:#7A7AD8,stroke-width:2px,color:#333333;\n    classDef process fill:#D0E8F2,stroke:#8BADC1,stroke-width:1px,color:#333333;\n    classDef io fill:#FFE4C4,stroke:#D9B382,stroke-width:1px,color:#333333;\n    classDef decision fill:#FFFACD,stroke:#D4C873,stroke-width:1.5px,color:#333333;\n    classDef note fill:#FFD1DC,stroke:#D1828F,stroke-width:1.5px,color:#333333;\n\n    %% Subgraph Styling\n    style Pipeline fill:#FCFCFE,stroke:#D0D0E0,stroke-width:2px,stroke-dasharray: 5 5,color:#333333;\n    style Dependencies fill:#F0F8FF,stroke:#8BADC1,stroke-width:2px,stroke-dasharray: 5 5,color:#333333;\n    style Legend fill:#F9F9F9,stroke:#CCCCCC,stroke-width:1px;\n\n    %% ==========================================\n    %% LEGEND\n    %% ==========================================\n    subgraph Legend [\&quot;Diagram Legend\&quot;]\n        direction LR\n        L1([Entry / Exit]):::startEnd\n        L2[Standard Operation]:::process\n        L3{Decision}:::decision\n        L4[(Data / Libraries)]:::io\n        L5[\&quot;Implementation Note\&quot;]:::note\n    end\n\n    %% ==========================================\n    %% DEPENDENCIES\n    %% ==========================================\n    subgraph Dependencies [\&quot;Explicit File Dependencies\&quot;]\n        direction TB\n        Ext1[(aixml::saveDocument&lt;br/&gt;External Method outside of Propulsion Design)]:::io\n        Ext2[(C++ Standard Library&lt;br/&gt;std::filesystem::exists)]:::io\n    end\n\n    %% ==========================================\n    %% ENTRY POINT\n    %% ==========================================\n    Entry([Start Phase 5: PropulsionDesign::save()&lt;br/&gt;File: src/propulsion_design.cpp]):::startEnd\n\n    %% ==========================================\n    %% MAIN PIPELINE (Level 1)\n    %% ==========================================\n    subgraph Pipeline [\&quot;Save and Export Pipeline\&quot;]\n        direction TB\n        \n        %% Directory Check\n        CheckDir{Does engine data&lt;br/&gt;directory exist?}:::decision\n        CreateDir[\&quot;Call this-&gt;get_RuntimeIO()-&gt;createEngineDataDir()\&quot;]:::process\n        \n        %% Save XML\n        SaveXML[\&quot;Call aixml::saveDocument(...)&lt;br/&gt;Saves *this-&gt;aircraft_xml\&quot;]:::process\n        \n        %% Delegate Save (Empty implementations)\n        DelegateSave[\&quot;Call .save() on all domain designers\&quot;]:::process\n        \n        EmptyOverridesNote[\&quot;Note: The following methods are currently&lt;br/&gt;empty virtual overrides in the base class:&lt;br/&gt;&lt;br/&gt;this-&gt;engine_designer-&gt;save();&lt;br/&gt;this-&gt;nacelle_designer-&gt;save();&lt;br/&gt;this-&gt;propulsion_integrator-&gt;save();&lt;br/&gt;this-&gt;pylon_designer-&gt;save();&lt;br/&gt;this-&gt;mass_analyzer-&gt;save();\&quot;]:::note\n        \n        %% Flow Connections\n        CheckDir --&gt;|No| CreateDir\n        CheckDir --&gt;|Yes| SaveXML\n        CreateDir --&gt; SaveXML\n        \n        SaveXML --&gt; DelegateSave\n        DelegateSave -.-&gt; EmptyOverridesNote\n    end\n\n    %% ==========================================\n    %% FLOW CONNECTIONS\n    %% ==========================================\n    Entry --&gt; CheckDir\n    \n    EndNode([End Phase 5: PropulsionDesign::save() Complete&lt;br&gt;Module Execution Finished]):::startEnd\n    \n    DelegateSave --&gt; EndNode\n    \n    %% ==========================================\n    %% DEPENDENCY LINKS\n    %% ==========================================\n    CheckDir -. \&quot;Uses\&quot; .-&gt; Ext2\n    SaveXML -. \&quot;Calls\&quot; .-&gt; Ext1&quot;,&#xa;  &quot;config&quot;: null&#xa;}" id="PZ5mkzE-7WF-LZCCTjkr-1">
+          <mxCell connectable="0" parent="1" style="group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;" vertex="1">
+            <mxGeometry as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Diagram Legend" mermaidId="n:Legend" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;verticalAlign=top;fillColor=#F9F9F9;strokeColor=#CCCCCC;fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Diagram Legend" id="PZ5mkzE-7WF-LZCCTjkr-2">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-1" style="html=1;whiteSpace=wrap;strokeWidth=1;verticalAlign=top;fillColor=#F9F9F9;strokeColor=#CCCCCC;fontColor=light-dark(#333333,#cccccc);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="589" width="283" x="958" y="204" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Entry / Exit" mermaidId="n:L1" mermaidBaseStyle="html=1;rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;fillColor=#C8C8FF;strokeColor=#7A7AD8;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Entry / Exit" id="PZ5mkzE-7WF-LZCCTjkr-3">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-2" style="html=1;rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;fillColor=#C8C8FF;strokeColor=#7A7AD8;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="39" width="107" x="88" y="45" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Standard Operation" mermaidId="n:L2" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Standard Operation" id="PZ5mkzE-7WF-LZCCTjkr-4">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-2" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="54" width="200" x="42" y="134" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Decision" mermaidId="n:L3" mermaidBaseStyle="rhombus;html=1;strokeWidth=1.5;whiteSpace=wrap;fillColor=#FFFACD;strokeColor=#D4C873;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Decision" id="PZ5mkzE-7WF-LZCCTjkr-5">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-2" style="rhombus;html=1;strokeWidth=1.5;whiteSpace=wrap;fillColor=#FFFACD;strokeColor=#D4C873;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="110" width="110" x="86" y="238" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Data / Libraries" mermaidId="n:L4" mermaidBaseStyle="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=1;whiteSpace=wrap;fillColor=#FFE4C4;strokeColor=#D9B382;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Data / Libraries" id="PZ5mkzE-7WF-LZCCTjkr-6">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-2" style="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=1;whiteSpace=wrap;fillColor=#FFE4C4;strokeColor=#D9B382;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="67" width="128" x="78" y="398" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Implementation Note" mermaidId="n:L5" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#FFD1DC;strokeColor=#D1828F;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Implementation Note" id="PZ5mkzE-7WF-LZCCTjkr-7">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-2" style="html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#FFD1DC;strokeColor=#D1828F;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="54" width="213" x="35" y="515" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Explicit File Dependencies" mermaidId="n:Dependencies" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;verticalAlign=top;fillColor=#F0F8FF;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;dashed=1;dashPattern=5 5;fixDash=1;" mermaidBaseValue="Explicit File Dependencies" id="PZ5mkzE-7WF-LZCCTjkr-8">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-1" style="html=1;whiteSpace=wrap;strokeWidth=2;verticalAlign=top;fillColor=#F0F8FF;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;dashed=1;dashPattern=5 5;fixDash=1;" vertex="1">
+            <mxGeometry height="151" width="632" x="716" y="1221" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="aixml::saveDocument&#xa;External Method outside of Propulsion Design" mermaidId="n:Ext1" mermaidBaseStyle="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=1;whiteSpace=wrap;fillColor=#FFE4C4;strokeColor=#D9B382;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="aixml::saveDocument&#xa;External Method outside of Propulsion Design" id="PZ5mkzE-7WF-LZCCTjkr-9">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-8" style="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=1;whiteSpace=wrap;fillColor=#FFE4C4;strokeColor=#D9B382;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="81" width="338" x="35" y="45" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="C++ Standard Library&#xa;std::filesystem::exists" mermaidId="n:Ext2" mermaidBaseStyle="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=1;whiteSpace=wrap;fillColor=#FFE4C4;strokeColor=#D9B382;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="C++ Standard Library&#xa;std::filesystem::exists" id="PZ5mkzE-7WF-LZCCTjkr-10">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-8" style="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=1;whiteSpace=wrap;fillColor=#FFE4C4;strokeColor=#D9B382;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="81" width="174" x="423" y="45" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Save and Export Pipeline" mermaidId="n:Pipeline" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;verticalAlign=top;fillColor=#FCFCFE;strokeColor=#D0D0E0;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;dashed=1;dashPattern=5 5;fixDash=1;" mermaidBaseValue="Save and Export Pipeline" id="PZ5mkzE-7WF-LZCCTjkr-11">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-1" style="html=1;whiteSpace=wrap;strokeWidth=2;verticalAlign=top;fillColor=#FCFCFE;strokeColor=#D0D0E0;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;dashed=1;dashPattern=5 5;fixDash=1;" vertex="1">
+            <mxGeometry height="987" width="630" x="30" y="649" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Does engine data&#xa;directory exist?" mermaidId="n:CheckDir" mermaidBaseStyle="rhombus;html=1;strokeWidth=1.5;whiteSpace=wrap;fillColor=#FFFACD;strokeColor=#D4C873;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Does engine data&#xa;directory exist?" id="PZ5mkzE-7WF-LZCCTjkr-12">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-11" style="rhombus;html=1;strokeWidth=1.5;whiteSpace=wrap;fillColor=#FFFACD;strokeColor=#D4C873;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="213" width="213" x="254" y="45" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Call this-&gt;get_RuntimeIO()-&gt;createEngineDataDir()" mermaidId="n:CreateDir" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Call this-&gt;get_RuntimeIO()-&gt;createEngineDataDir()" id="PZ5mkzE-7WF-LZCCTjkr-13">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-11" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="54" width="424" x="171" y="327" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Call aixml::saveDocument(...)&#xa;Saves *this-&gt;aircraft_xml" mermaidId="n:SaveXML" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Call aixml::saveDocument(...)&#xa;Saves *this-&gt;aircraft_xml" id="PZ5mkzE-7WF-LZCCTjkr-14">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-11" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="73" width="276" x="80" y="450" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Call .save() on all domain designers" mermaidId="n:DelegateSave" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Call .save() on all domain designers" id="PZ5mkzE-7WF-LZCCTjkr-15">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-11" style="html=1;whiteSpace=wrap;strokeWidth=1;fillColor=#D0E8F2;strokeColor=#8BADC1;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="54" width="315" x="61" y="630" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Note: The following methods are currently&#xa;empty virtual overrides in the base class:&#xa;&#xa;this-&gt;engine_designer-&gt;save();&#xa;this-&gt;nacelle_designer-&gt;save();&#xa;this-&gt;propulsion_integrator-&gt;save();&#xa;this-&gt;pylon_designer-&gt;save();&#xa;this-&gt;mass_analyzer-&gt;save();" mermaidId="n:EmptyOverridesNote" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#FFD1DC;strokeColor=#D1828F;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Note: The following methods are currently&#xa;empty virtual overrides in the base class:&#xa;&#xa;this-&gt;engine_designer-&gt;save();&#xa;this-&gt;nacelle_designer-&gt;save();&#xa;this-&gt;propulsion_integrator-&gt;save();&#xa;this-&gt;pylon_designer-&gt;save();&#xa;this-&gt;mass_analyzer-&gt;save();" id="PZ5mkzE-7WF-LZCCTjkr-16">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-11" style="html=1;whiteSpace=wrap;strokeWidth=1.5;fillColor=#FFD1DC;strokeColor=#D1828F;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="189" width="366" x="35" y="773" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="No" mermaidId="e:CheckDir-&gt;CreateDir#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=0.58;exitY=1;entryX=0.5;entryY=0;" mermaidBaseValue="No" id="PZ5mkzE-7WF-LZCCTjkr-17">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-11" source="PZ5mkzE-7WF-LZCCTjkr-12" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=0.58;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-13">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="383" y="292" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Yes" mermaidId="e:CheckDir-&gt;SaveXML#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=0;exitY=0.8;entryX=0.33;entryY=0;" mermaidBaseValue="Yes" id="PZ5mkzE-7WF-LZCCTjkr-18">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-11" source="PZ5mkzE-7WF-LZCCTjkr-12" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=0;exitY=0.8;entryX=0.33;entryY=0;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-14">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="125" y="292" />
+                <mxPoint x="125" y="354" />
+                <mxPoint x="125" y="415" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:CreateDir-&gt;SaveXML#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.81;entryY=0;" mermaidBaseValue="" id="PZ5mkzE-7WF-LZCCTjkr-19">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-11" source="PZ5mkzE-7WF-LZCCTjkr-13" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.81;entryY=0;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-14">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="383" y="415" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:SaveXML-&gt;DelegateSave#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.5;entryY=0;" mermaidBaseValue="" id="PZ5mkzE-7WF-LZCCTjkr-20">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-11" source="PZ5mkzE-7WF-LZCCTjkr-14" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-15">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:DelegateSave-&gt;EmptyOverridesNote#0" mermaidBaseStyle="curved=1;dashed=1;dashPattern=2 3;fixDash=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.5;entryY=0;" mermaidBaseValue="" id="PZ5mkzE-7WF-LZCCTjkr-21">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-11" source="PZ5mkzE-7WF-LZCCTjkr-15" style="curved=1;dashed=1;dashPattern=2 3;fixDash=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-16">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Start Phase 5: PropulsionDesign::save()&#xa;File: src/propulsion_design.cpp" mermaidId="n:Entry" mermaidBaseStyle="html=1;rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;fillColor=#C8C8FF;strokeColor=#7A7AD8;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="Start Phase 5: PropulsionDesign::save()&#xa;File: src/propulsion_design.cpp" id="PZ5mkzE-7WF-LZCCTjkr-22">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-1" style="html=1;rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;fillColor=#C8C8FF;strokeColor=#7A7AD8;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="53" width="303" x="239" y="298" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="End Phase 5: PropulsionDesign::save() Complete&#xa;Module Execution Finished" mermaidId="n:EndNode" mermaidBaseStyle="html=1;rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;fillColor=#C8C8FF;strokeColor=#7A7AD8;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" mermaidBaseValue="End Phase 5: PropulsionDesign::save() Complete&#xa;Module Execution Finished" id="PZ5mkzE-7WF-LZCCTjkr-23">
+          <mxCell parent="PZ5mkzE-7WF-LZCCTjkr-1" style="html=1;rounded=1;whiteSpace=wrap;arcSize=50;strokeWidth=2;fillColor=#C8C8FF;strokeColor=#7A7AD8;fontColor=#333333;fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontSize=16;" vertex="1">
+            <mxGeometry height="53" width="368" x="731" y="1490" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:Entry-&gt;CheckDir#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.5;entryY=0;" mermaidBaseValue="" id="PZ5mkzE-7WF-LZCCTjkr-24">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-1" source="PZ5mkzE-7WF-LZCCTjkr-22" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-12">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="" mermaidId="e:DelegateSave-&gt;EndNode#0" mermaidBaseStyle="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.85;exitY=1;entryX=0.26;entryY=0;" mermaidBaseValue="" id="PZ5mkzE-7WF-LZCCTjkr-25">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-1" source="PZ5mkzE-7WF-LZCCTjkr-15" style="curved=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);exitX=0.85;exitY=1;entryX=0.26;entryY=0;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-23">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="519" y="1372" />
+                <mxPoint x="519" y="1397" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Uses" mermaidId="e:CheckDir-&gt;Ext2#0" mermaidBaseStyle="curved=1;dashed=1;dashPattern=2 3;fixDash=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.76;entryX=0;entryY=0.37;" mermaidBaseValue="Uses" id="PZ5mkzE-7WF-LZCCTjkr-26">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-1" source="PZ5mkzE-7WF-LZCCTjkr-12" style="curved=1;dashed=1;dashPattern=2 3;fixDash=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=1;exitY=0.76;entryX=0;entryY=0.37;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-10">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="660" y="941" />
+                <mxPoint x="660" y="1003" />
+                <mxPoint x="660" y="1064" />
+                <mxPoint x="660" y="1135" />
+                <mxPoint x="660" y="1206" />
+                <mxPoint x="660" y="1241" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Calls" mermaidId="e:SaveXML-&gt;Ext1#0" mermaidBaseStyle="curved=1;dashed=1;dashPattern=2 3;fixDash=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=1;exitY=1;entryX=0;entryY=0.16;" mermaidBaseValue="Calls" id="PZ5mkzE-7WF-LZCCTjkr-27">
+          <mxCell edge="1" parent="PZ5mkzE-7WF-LZCCTjkr-1" source="PZ5mkzE-7WF-LZCCTjkr-14" style="curved=1;dashed=1;dashPattern=2 3;fixDash=1;startArrow=none;endArrow=block;endSize=7;strokeColor=light-dark(#333333,#cccccc);html=1;fontSize=16;labelBackgroundColor=light-dark(#E8E8E88D,#2a2a2a8D);fontFamily=Trebuchet MS,Verdana,Arial,sans-serif;fontColor=light-dark(#333333,#cccccc);exitX=1;exitY=1;entryX=0;entryY=0.16;rounded=0;" target="PZ5mkzE-7WF-LZCCTjkr-9">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="518" y="1206" />
+                <mxPoint x="518" y="1241" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
